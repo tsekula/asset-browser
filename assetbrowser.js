@@ -6,6 +6,8 @@ var $grid;
 var $assets;
 var $currentasset = 0;
 var $imgpath = "https://i2.wp.com/demo.skyoverhill.com/wp-content/uploads/2019/02/";
+//var $assetsourceURL = "https://next.json-generator.com/api/json/get/4kWOAyt8U";
+var $assetsourceURL = "http://127.0.0.1:5500/assets.json";
 var $imgheight = 400;
 
 function displayImages() {
@@ -16,14 +18,45 @@ function displayImages() {
 
 // Handle clicking an asset image
 function clickAssetHandler(error){
+  // populate details pane
   var index = $(this).attr( "data-asset-index" );
   $("div#sAssetDetails h1#title").html($assets[index].name);
-  $("div#sAssetDetails div#description").html($assets[index].cat);
+  $("div#sAssetDetails div#description h2#category").html($assets[index].cat);
+  var fullimg = '<img src="' + 
+  $imgpath + $assets[index].imgsrc + '?h=700" ' +
+  ' class = "assetmain"' +
+  '/>';
+
+  $("div#imgmain").html(fullimg);
+
+  toggleDetailsPane(1);
 }
+
+// Close Details Pane
+function clickCloseDetailsPaneHandler(error){
+  console.log('sdfsdf');
+
+  toggleDetailsPane();
+}
+
+function toggleDetailsPane(show){
+  // set visibility of details pane if hidden
+  if (instance.getSizes()[1]<35 || show) {
+    // show pane
+    instance.setSizes([65,35]);
+    $("div#sAssetDetails").show();
+    $grid.isotope();
+  } else {
+    // hide pane
+    $("div#sAssetDetails").hide();
+    instance.setSizes([100,0]);
+    $grid.isotope();
+  }
+}
+
 
 $.fn.isotopeImagesReveal = function( $items ) {
   var iso = this.data('isotope');
-  console.log(this);
   var itemSelector = iso.options.itemSelector;
   // hide by default
   $items.hide();
@@ -74,10 +107,7 @@ function loadItems() {
 }
 
 function loadAssets(callback) {
-  //var assetsourceURL = "http://www.sekula.com/uploads/assets2.json";
-  var assetsourceURL = "https://next.json-generator.com/api/json/get/4kWOAyt8U";
-
-  $.getJSON(assetsourceURL)
+  $.getJSON($assetsourceURL)
     .fail(function() {
       console.log( "error" );
     })
@@ -87,36 +117,38 @@ function loadAssets(callback) {
       });  
 }
 
-
 /* Split */
 var instance 
 
-window.onload = function() {
-};
-
-
 /* startup instructions */
 $(function() {
+
+    // initialize splitter
     instance = Split(['#sGallery', '#sAssetDetails'], {
-        gutterSize: 0,
-        sizes: [65, 35],
-        cursor: 'pointer',
-    });
+      gutterSize: 0,
+      sizes: [100, 0],
+  });
+        
+
 
     $grid = $('.grid').isotope({
+        // set itemSelector so .grid-sizer is not used in layout
         itemSelector: '.grid-item',
+        percentPosition: true,
+        masonry: {
+          columnWidth: '.grid-sizer'
+        },
         getSortData: {
           name: '[data-asset-name]',
           category: '[data-asset-category]'
-        },
-        masonry: {
-          columnWidth: 200  
         },
         initLayout: false
       });
       
     // wire-up click event for the grid
     $(".grid").on("click", ".grid-item", clickAssetHandler);
+    // wire-up click event for the grid
+    $("button.closepane").on("click", clickCloseDetailsPaneHandler);
 
     // filter items on button click
     $('.filter-button-group').on( 'click', 'button', function() {
@@ -127,4 +159,5 @@ $(function() {
     $('#load-images').click(displayImages);
 
     loadAssets(displayImages);
+    
 });

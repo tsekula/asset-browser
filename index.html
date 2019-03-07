@@ -8,42 +8,54 @@
             <script type="text/javascript" src="assetbrowser.js"></script>            
             
             <link href="assetbrowser.css" rel="stylesheet" type="text/css" />
+            <link href="asset-split.css" rel="stylesheet" type="text/css" />
+            <link href="https://fonts.googleapis.com/css?family=Lato" rel="stylesheet">
     </head>
 <body>
 <div>
-<div id="sGallery" class="split content split-horizontal">
 
-    <h1>Demo of masonry layout, progressive loading of images, and filtering</h1>
-    <div class="button-group filter-button-group">
-      <button class="button" data-filter="*">Show All</button>
-      <button class="button" data-filter="[data-asset-category='asphalt']">Asphalt</button>
-      <button class="button" data-filter="[data-asset-category='brick']">Brick</button>
-      <button class="button" data-filter="[data-asset-category='brushes']">Brushes</button>
-      <button class="button" data-filter="[data-asset-category='grass']">Grass</button>
-      <button class="button" data-filter="[data-asset-category='ground']">Ground</button>
-      <button class="button" data-filter="[data-asset-category='plants']">Plants</button>
+  <section id="header">
+      <h1>I'm just the header</h1>
+      <h1>Demo of masonry layout, progressive loading of images, and filtering</h1>
+      <div class="button-group filter-button-group">
+        <button class="button" data-filter="*">Show All</button>
+        <button class="button" data-filter="[data-asset-category='asphalt']">Asphalt</button>
+        <button class="button" data-filter="[data-asset-category='brick']">Brick</button>
+        <button class="button" data-filter="[data-asset-category='brushes']">Brushes</button>
+        <button class="button" data-filter="[data-asset-category='grass']">Grass</button>
+        <button class="button" data-filter="[data-asset-category='ground']">Ground</button>
+        <button class="button" data-filter="[data-asset-category='plants']">Plants</button>
+      </div>
+    </section>
+
+  <section id="content">
+  <div id="sGallery" class="hsplit style-1">
+    <div class="grid">
+        <!-- width of .grid-sizer used for columnWidth -->
+        <div class="grid-sizer"></div>
+        <div class="grid-item"></div>
+        <div class="grid-item grid-item--width2"></div>
+        ...
     </div>
-      <div class="grid"></div>
     
       <p><button class="button" id="load-images">LODE MOAR!</button></p>
 </div>
 
-      <div id="sAssetDetails" class="split content split-horizontal three">
-    
+      <div id="sAssetDetails" class="hsplit">
+          <div class="overlaypane shadow">
+          <button class="button closepane">X</button>
           <h1 id="title">Some Page Content</h1>
           <div id="description">
-                    <p>Eventually details of the asset will go here.</p>
+                    <h2 id="category">Eventually details of the asset will go here.</h2>
+                    <div id="imgmain"></div>
     
-                    <p>Aenean ullamcorper elit eu nisl feugiat, ut ultrices velit fermentum. Maecenas dictum sem porta tellus accumsan venenatis. Vivamus sit amet dolor quis enim facilisis mollis. Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Praesent posuere, justo elementum vulputate blandit, velit quam hendrerit lorem, in laoreet lacus elit sed tortor. Suspendisse ut feugiat sapien. Morbi et pellentesque magna, sed imperdiet ante. Nulla facilisi. Mauris eu nulla vitae augue sagittis feugiat sit amet eu magna. Sed et neque turpis. Curabitur consequat sapien ut hendrerit placerat.</p>
-    
-                    <p>Integer viverra augue nec velit tincidunt tincidunt. Morbi bibendum ullamcorper augue, non pellentesque metus bibendum id. Sed non feugiat libero, at pharetra enim. Proin ut accumsan elit. Cras sit amet arcu euismod, eleifend neque ac, congue odio. Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Quisque at nibh at lacus feugiat gravida. Fusce sit amet mauris risus. Phasellus maximus aliquet nisi porta commodo. Duis vel tortor ipsum. Ut pharetra lacus a massa bibendum feugiat. Vestibulum quis sodales orci. Mauris a nisl blandit, vehicula eros ac, rutrum arcu.</p>
-    
-                    <p>Proin tempus viverra nisi. Phasellus ut rutrum nisl, eget ultrices ante. In egestas tortor eu nunc placerat tincidunt. Vivamus feugiat ultricies ultricies. Vestibulum gravida aliquam neque, et varius eros semper a. Sed non leo ac magna congue placerat eget at nunc. Proin pharetra bibendum lectus a efficitur. Phasellus ullamcorper, nisi at luctus congue, tortor felis tristique augue, sit amet commodo quam libero quis massa. Pellentesque feugiat nisi mi, in fringilla dui rhoncus eu.</p>
-    
-                    <p>Praesent ut euismod mauris, ut consectetur tellus. Phasellus vel metus pulvinar, vestibulum dui quis, consectetur arcu. Praesent rutrum sodales ligula et cursus. Sed sem enim, ornare eu elit a, dignissim lobortis erat. Sed a sapien non elit hendrerit viverra laoreet lacinia orci. Pellentesque id mauris posuere risus tincidunt tincidunt. In tempus, ante sed hendrerit malesuada, massa arcu fermentum magna, at finibus mi nisl vitae lacus.</p>      
+                          
           </div>
-                
+        </div> 
     </div>      
-</div>
+  </section>
+
+
+  </div>
 </body>
 </html>
