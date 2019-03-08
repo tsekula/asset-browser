@@ -5,16 +5,18 @@
             <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jquery/2.2.2/jquery.min.js"></script>
             <script type="text/javascript" src="https://unpkg.com/isotope-layout@3/dist/isotope.pkgd.js"></script>
             <script type="text/javascript" src="https://unpkg.com/imagesloaded@4/imagesloaded.pkgd.js"></script>
+            <script type="text/javascript" src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
             <script type="text/javascript" src="assetbrowser.js"></script>            
             
             <link href="assetbrowser.css" rel="stylesheet" type="text/css" />
             <link href="asset-split.css" rel="stylesheet" type="text/css" />
             <link href="https://fonts.googleapis.com/css?family=Lato" rel="stylesheet">
+            <link rel="stylesheet" href="https://code.jquery.com/ui/1.12.1/themes/smoothness/jquery-ui.css">
     </head>
 <body>
 <div>
 
-  <section id="header">
+  <section id="filters">
       <h1>I'm just the header</h1>
       <h1>Demo of masonry layout, progressive loading of images, and filtering</h1>
       <div class="button-group filter-button-group">
@@ -33,9 +35,6 @@
     <div class="grid">
         <!-- width of .grid-sizer used for columnWidth -->
         <div class="grid-sizer"></div>
-        <div class="grid-item"></div>
-        <div class="grid-item grid-item--width2"></div>
-        ...
     </div>
     
       <p><button class="button" id="load-images">LODE MOAR!</button></p>

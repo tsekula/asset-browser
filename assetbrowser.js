@@ -6,8 +6,9 @@ var $grid;
 var $assets;
 var $currentasset = 0;
 var $imgpath = "https://i2.wp.com/demo.skyoverhill.com/wp-content/uploads/2019/02/";
-//var $assetsourceURL = "https://next.json-generator.com/api/json/get/4kWOAyt8U";
-var $assetsourceURL = "http://127.0.0.1:5500/assets.json";
+var $assetsourceURL = "https://next.json-generator.com/api/json/get/4kWOAyt8U";
+//var $assetsourceURL = "http://www.sekula.com/filez/assets.json";
+//var $assetsourceURL = "http://127.0.0.1:5500/assets.json";
 var $imgheight = 400;
 
 function displayImages() {
@@ -19,23 +20,22 @@ function displayImages() {
 // Handle clicking an asset image
 function clickAssetHandler(error){
   // populate details pane
-  var index = $(this).attr( "data-asset-index" );
-  $("div#sAssetDetails h1#title").html($assets[index].name);
-  $("div#sAssetDetails div#description h2#category").html($assets[index].cat);
+  var index = jQuery(this).attr( "data-asset-index" );
+  jQuery("div#sAssetDetails .overlaypane").hide();
+  jQuery("div#sAssetDetails h1#title").html($assets[index].name);
+  jQuery("div#sAssetDetails div#description h2#category").html($assets[index].cat);
   var fullimg = '<img src="' + 
   $imgpath + $assets[index].imgsrc + '?h=700" ' +
   ' class = "assetmain"' +
   '/>';
 
-  $("div#imgmain").html(fullimg);
+  jQuery("div#imgmain").html(fullimg);
 
   toggleDetailsPane(1);
 }
 
 // Close Details Pane
 function clickCloseDetailsPaneHandler(error){
-  console.log('sdfsdf');
-
   toggleDetailsPane();
 }
 
@@ -44,11 +44,13 @@ function toggleDetailsPane(show){
   if (instance.getSizes()[1]<35 || show) {
     // show pane
     instance.setSizes([65,35]);
-    $("div#sAssetDetails").show();
+    jQuery("div#sAssetDetails").show();
+    jQuery("div#sAssetDetails .overlaypane").show("fade");
     $grid.isotope();
   } else {
     // hide pane
-    $("div#sAssetDetails").hide();
+    jQuery("div#sAssetDetails").hide();
+    jQuery("div#sAssetDetails .overlaypane").hide();
     instance.setSizes([100,0]);
     $grid.isotope();
   }
@@ -65,7 +67,7 @@ $.fn.isotopeImagesReveal = function( $items ) {
   $items.imagesLoaded().progress( function( imgLoad, image ) {
     // get item
     // image is imagesLoaded class, not <img>, <img> is image.img
-    var $item = $( image.img ).parents( itemSelector );
+    var $item = jQuery( image.img ).parents( itemSelector );
     // un-hide item
     $item.show();
     // isotope does its thing
@@ -103,11 +105,11 @@ function loadItems() {
   }
   $currentasset = i;
   // return jQuery object
-  return $( items );  
+  return jQuery( items );  
 }
 
 function loadAssets(callback) {
-  $.getJSON($assetsourceURL)
+  jQuery.getJSON($assetsourceURL)
     .fail(function() {
       console.log( "error" );
     })
@@ -121,7 +123,7 @@ function loadAssets(callback) {
 var instance 
 
 /* startup instructions */
-$(function() {
+jQuery(document).ready(function($){
 
     // initialize splitter
     instance = Split(['#sGallery', '#sAssetDetails'], {
@@ -131,7 +133,7 @@ $(function() {
         
 
 
-    $grid = $('.grid').isotope({
+    $grid = jQuery('.grid').isotope({
         // set itemSelector so .grid-sizer is not used in layout
         itemSelector: '.grid-item',
         percentPosition: true,
@@ -146,17 +148,17 @@ $(function() {
       });
       
     // wire-up click event for the grid
-    $(".grid").on("click", ".grid-item", clickAssetHandler);
+    jQuery(".grid").on("click", ".grid-item", clickAssetHandler);
     // wire-up click event for the grid
-    $("button.closepane").on("click", clickCloseDetailsPaneHandler);
+    jQuery("button.closepane").on("click", clickCloseDetailsPaneHandler);
 
     // filter items on button click
-    $('.filter-button-group').on( 'click', 'button', function() {
-    var filterValue = $(this).attr('data-filter');
+    jQuery('.filter-button-group').on( 'click', 'button', function() {
+    var filterValue = jQuery(this).attr('data-filter');
     $grid.isotope({ filter: filterValue });
     });
 
-    $('#load-images').click(displayImages);
+    jQuery('#load-images').click(displayImages);
 
     loadAssets(displayImages);
     
