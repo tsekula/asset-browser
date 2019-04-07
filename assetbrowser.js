@@ -4,11 +4,10 @@
 // Variables for asset list and images
 var $grid;
 var $assets;
-var $currentasset = 0;
+var $assetindex = 0;
+var $assetbatchsize = 40;
 var $imgpath = "https://i2.wp.com/demo.skyoverhill.com/wp-content/uploads/2019/02/";
-var $assetsourceURL = "https://next.json-generator.com/api/json/get/4kWOAyt8U";
-//var $assetsourceURL = "http://www.sekula.com/filez/assets.json";
-//var $assetsourceURL = "http://127.0.0.1:5500/assets.json";
+var $assetsourceURL = "https://qwess.io/graphql";
 var $imgheight = 400;
 
 function displayImages() {
@@ -21,11 +20,12 @@ function displayImages() {
 function clickAssetHandler(error){
   // populate details pane
   var index = jQuery(this).attr( "data-asset-index" );
+  var thisitem = $assets[index]["node"]
   jQuery("div#sAssetDetails .overlaypane").hide();
-  jQuery("div#sAssetDetails h1#title").html($assets[index].name);
-  jQuery("div#sAssetDetails div#description h2#category").html($assets[index].cat);
+  jQuery("div#sAssetDetails h1#title").html(thisitem.title);
+  jQuery("div#sAssetDetails div#description h2#category").html(thisitem.wc_filter_list);
   var fullimg = '<img src="' + 
-  $imgpath + $assets[index].imgsrc + '?h=700" ' +
+  thisitem.thumbnail + '?h=700" ' +
   ' class = "assetmain"' +
   '/>';
 
@@ -81,42 +81,68 @@ function randomInt( min, max ) {
   return Math.floor( Math.random() * max + min );
 }
 
+/* create a new individual DOM asset item*/
 function loadItem(index) {
-  var thisitem = $assets[index];
-  var item = '<div class="grid-item" '+ 
+  var thisitem = $assets[index]["node"];
+  var item = '<div class="grid-item '+ thisitem.wc_filter_list.toLowerCase() + '"' +
       ' data-asset-index = "' + index + '"' +
-      ' data-asset-name = "' + thisitem.name + '"' +
-      ' data-asset-category = "' + thisitem.cat + '"' +
-      ' data-asset-subcategory = "' + thisitem.subcat + '"' +  
+      ' data-asset-name = "' + thisitem.title + '"' +
     '>'+
     '<img src="' + 
-      $imgpath + thisitem.imgsrc + '?h=' +  $imgheight +'" ' +
+      thisitem.thumbnail + '?h=' +  $imgheight +'" ' +
       ' class = "assets"' +
       '/></div>';
   return item;
 }
 
+/* retrieve a set of asset data and create DOM items */
 function loadItems() {
   var items = '';
-  for (var i=$currentasset; i < $currentasset+40; i++ ) {
+  for (var i=$assetindex; i < $assetindex+$assetbatchsize; i++ ) {
     if (i==$assets.length)
        break;
     items += loadItem(i);
   }
-  $currentasset = i;
+  $assetindex = i;
   // return jQuery object
   return jQuery( items );  
 }
 
-function loadAssets(callback) {
-  jQuery.getJSON($assetsourceURL)
-    .fail(function() {
-      console.log( "error" );
+/* Pull initial list of assets from remote source*/
+function loadAssets() {
+  // Default options are marked with *
+    return fetch($assetsourceURL, {
+        method: "POST",
+        mode: "cors", // no-cors, cors, *same-origin
+        cache: "default", // *default, no-cache, reload, force-cache, only-if-cached
+        headers: {
+            "Content-Type": "application/json",
+        },
+        redirect: "follow", // manual, *follow, error
+        referrer: "no-referrer", // no-referrer, *client
+        body: JSON.stringify({
+          query: `
+          query GETPRODUCTS {
+            products(last:100) {
+            edges {
+              node {
+                productId
+                thumbnail
+                id
+                date
+                price
+                thumbnail_video
+                title
+                wc_filter_list
+              }
+            }
+          }
+        }
+              `,
+        }), // body data type must match "Content-Type" header
     })
-    .done(function(data) {
-      $assets = data;
-      callback();
-      });  
+    .then(response => response.json()); // parses JSON response into native Javascript objects 
+
 }
 
 /* Split */
@@ -160,6 +186,17 @@ jQuery(document).ready(function($){
 
     jQuery('#load-images').click(displayImages);
 
-    loadAssets(displayImages);
-    
+    //loadAssets(displayImages);
+
+    loadAssets()
+    //.then(data => $assets = data["data"]["products"]["edges"])
+    .then(function(data){
+      $assets = data["data"]["products"]["edges"];
+      displayImages();
+    })
+    //.then(displayImages())
+    .catch(function(error){
+      console.log("There has been an error: " + error.data);}
+    );
+      
 });
